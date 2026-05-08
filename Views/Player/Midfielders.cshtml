@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.Player.PlayerListModel>
+
+@{
+    Layout = "_PlayerLayout";
+    ViewData["Title"] = "Midfielders";
+}
+
+<h1 class="mb-4 fw-bold text-uppercase text-center text-danger">Midfielders</h1>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    @foreach (var player in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow text-center border-0" style="background-color:#1C1C1C; color:white;">
+
+                <!-- ✅ Clickable image -->
+                <a asp-action="Details" asp-route-id="@player.Id">
+                    <img class="card-img-top rounded-top"
+                         src="data:@(player.ImageType ?? "image/jpeg");base64,@(player.ImageData != null ? Convert.ToBase64String(player.ImageData) : "")"
+                         alt="@(player.Name ?? "Player image")"
+                         style="object-fit:cover; height:250px; cursor:pointer;" />
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-warning">@player.Name</h5>
+                </div>
+            </div>
+        </div>
+    }
+</div>

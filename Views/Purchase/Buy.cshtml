@@ -1,0 +1,165 @@
+﻿@model ManchesterUnitedApp.Models.PurchaseModel.PurchaseEntryModel
+
+@{
+    ViewData["Title"] = "Buy Item";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+        color: #333;
+    }
+
+    .mufc-header {
+        text-align: center;
+        font-size: 36px;
+        font-weight: bold;
+        color: #DA291C;
+        margin-bottom: 30px;
+    }
+
+    .buy-container {
+        max-width: 600px;
+        margin: 0 auto 30px auto;
+        padding: 25px;
+        background-color: #fff;
+        border: 2px solid #DA291C;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(218,41,28,0.2);
+    }
+
+    .form-group label {
+        font-weight: 600;
+        color: #DA291C;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #DA291C;
+        padding: 8px 12px;
+        margin-bottom: 15px;
+    }
+
+    .btn-mufc {
+        background-color: #DA291C;
+        color: white;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        transition: background-color 0.2s, transform 0.2s;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        .btn-mufc:hover {
+            background-color: #b91f17;
+            transform: translateY(-2px);
+        }
+
+    .back-link {
+        display: inline-block;
+        margin-top: 15px;
+        border: 2px solid #DA291C;
+        color: #DA291C;
+        padding: 8px 18px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+        .back-link:hover {
+            background-color: #DA291C;
+            color: white;
+        }
+
+    .total-display {
+        background-color: #f8f8f8;
+        font-weight: bold;
+    }
+
+    .qty-error {
+        color: red;
+        font-weight: 600;
+        margin-top: -10px;
+        display: block;
+    }
+</style>
+
+<div class="mufc-header">Buy Item</div>
+
+<div class="buy-container">
+    <form asp-action="Buy" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="ItemId" />
+        <input type="hidden" id="ItemPrice" value="@Model.Total" />
+
+        <div class="form-group">
+            <label asp-for="Qty">Quantity</label>
+            <input asp-for="Qty" id="QtyInput" class="form-control" />
+            <span id="qtyError" class="qty-error"></span>
+            <span asp-validation-for="Qty" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Total</label>
+            <input id="TotalDisplay" class="form-control total-display" disabled />
+            <input type="hidden" asp-for="Total" id="TotalHidden" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PaymentBillImage">Upload Payment Screenshot</label>
+            <input asp-for="PaymentBillImage" accept=".jpg,.jpeg,.png,.gif" type="file" class="form-control" />
+            <span asp-validation-for="PaymentBillImage" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn-mufc">Confirm Purchase</button>
+    </form>
+
+    <a href="/Shop/Index" class="back-link">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        const qtyInput = document.getElementById('QtyInput');
+        const price = parseFloat(document.getElementById('ItemPrice').value);
+        const totalDisplay = document.getElementById('TotalDisplay');
+        const totalHidden = document.getElementById('TotalHidden');
+        const qtyError = document.getElementById('qtyError');
+
+        const maxStock = @Model.AvailableStock;
+
+        const form = document.querySelector('form');
+        function updateTotal() {
+            let qty = parseInt(qtyInput.value) ||  0;
+
+            if (qty > maxStock) {
+                qtyError.innerText = 'You entered more than available stock!';
+            } else {
+                qtyError.innerText = '';
+            }
+
+            let validQty = Math.min(qty, maxStock);
+            let total = price * validQty;
+
+            totalDisplay.value = `$ ${total.toFixed(2)}`;
+            totalHidden.value = total;
+        }
+
+        qtyInput.addEventListener('input', updateTotal);
+
+        form.addEventListener('submit', function(e) {
+            let qty = parseInt(qtyInput.value) ||  0;
+            if (qty > maxStock) {
+                e.preventDefault();
+                qtyError.innerText = 'You entered more than available stock!';
+            }
+        });
+
+        // Set default total
+        updateTotal();
+    </script>
+}
+

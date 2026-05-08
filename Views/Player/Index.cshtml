@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.Player.PlayerListModel>
+
+@{
+    Layout = "_PlayerLayout";
+    ViewData["Title"] = "Players";
+    var selectedGender = (ViewBag.SelectedGender as string) ?? string.Empty;
+    var selectedTeam = (ViewBag.SelectedTeam as string) ?? string.Empty;
+    var searchTerm = (ViewBag.SearchTerm as string) ?? string.Empty;
+}
+
+<h1 class="mb-4 fw-bold text-uppercase text-center">Players</h1>
+
+
+
+
+<!-- ✅ Responsive Card Grid -->
+@if (Model != null && Model.Any())
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var player in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    <div class="position-relative">
+                        <!-- ✅ Make image clickable to Details -->
+                        <a asp-action="Details" asp-route-id="@player.Id">
+                            <img class="card-img-top rounded-top"
+                                 src="data:@(player.ImageType ?? "image/jpeg");base64,@(player.ImageData != null ? Convert.ToBase64String(player.ImageData) : "")"
+                                 alt="@(player.Name ?? "Player image")"
+                                 style="object-fit:cover; height:250px; cursor:pointer;" />
+                        </a>
+
+                        @if (!string.IsNullOrEmpty(player.StatusName) && player.StatusName.Equals("ON LOAN", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">ON LOAN</span>
+                        }
+                    </div>
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@player.Name</h5>
+                        <!-- ✅ Removed other details here -->
+                    </div>
+
+                    <div class="card-footer bg-light d-flex justify-content-center gap-2">
+                        @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@player.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@player.Id" class="btn btn-sm btn-danger">Delete</a>
+                            <a asp-action="Details" asp-route-id="@player.Id" class="btn btn-sm btn-primary">Details</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">No players found for this filter.</div>
+}

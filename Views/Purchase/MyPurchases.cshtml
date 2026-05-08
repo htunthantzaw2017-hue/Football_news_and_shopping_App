@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.PurchaseModel.PurchaseListModel>
+
+@{
+    ViewData["Title"] = "MyPurchases";
+}
+
+<h1>MyPurchases</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th>Purchase Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.ItemName</td>
+                <td>@p.Qty</td>
+                <td>@p.Total.ToString("C")</td>
+                <td>@p.PurchaseDate.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @if (p.StatusText == "Action in Progress...")
+                    {
+                        <span class="badge bg-warning">@p.StatusText</span>
+                    }
+                    else if (p.StatusText == "Done")
+                    {
+                        <span class="badge bg-success">@p.StatusText</span>
+                    }
+                    else if (p.StatusText == "Canceled")
+                    {
+                        <span class="badge bg-danger">@p.StatusText</span>
+                    }
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

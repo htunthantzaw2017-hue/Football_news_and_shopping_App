@@ -1,0 +1,98 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.PurchaseModel.PurchaseListModel>
+
+@{
+    ViewData["Title"] = "CompletedOrders";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+    }
+
+    .mufc-header {
+        font-size: 36px;
+        font-weight: bold;
+        color: #DA291C;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .nav-links a {
+        margin-right: 15px;
+        font-weight: 600;
+        color: #DA291C;
+        text-decoration: none;
+    }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+    .mufc-table thead {
+        background-color: #FFCDD2; /* Light MUFC red tint */
+        color: #DA291C;
+        font-weight: bold;
+    }
+
+    .details-link {
+        color: #DA291C;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+        .details-link:hover {
+            text-decoration: underline;
+        }
+
+    .back-btn {
+        border: 2px solid #DA291C;
+        color: #DA291C;
+        font-weight: 600;
+    }
+
+        .back-btn:hover {
+            background-color: #DA291C;
+            color: white;
+        }
+</style>
+
+<h1 class="mufc-header">Completed Orders</h1>
+
+<div class="nav-links mb-4">
+    <a asp-action="PurchaseHistory">New Order</a>
+    <a asp-action="CompletedOrders">Completed Order</a>
+    <a asp-action="CanceledOrders">Cancelled Order</a>
+</div>
+
+<table class="table table-bordered table-striped mufc-table">
+    <thead>
+        <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th>Customer</th>
+            <th>Purchase Date</th>
+            <th>Completed On</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.ItemName</td>
+                <td>@o.Qty</td>
+                <td>$@o.Total</td>
+                <td>@o.CreatedBy</td>
+                <td>@o.PurchaseDate</td>
+                <td>@o.CreatedOn</td>
+                <td>
+                    <a href="@Url.Action("Details", new { id = o.Id })" class="details-link">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="PurchaseHistory" class="btn back-btn">Back to New Orders</a>

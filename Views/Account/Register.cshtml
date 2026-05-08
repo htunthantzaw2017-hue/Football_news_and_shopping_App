@@ -1,0 +1,137 @@
+﻿@model ManchesterUnitedApp.Models.Account.RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    .themed-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .register-card {
+        background-color: #ffffff;
+        border: 2px solid #DA291C;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+    }
+
+    .btn-manutd-red {
+        background-color: #DA291C;
+        border-color: #DA291C;
+        color: #ffffff;
+        transition: background-color 0.3s;
+    }
+
+        .btn-manutd-red:hover {
+            background-color: #A31E17;
+            border-color: #A31E17;
+            color: #ffffff;
+        }
+
+    .mu-text-red {
+        color: #DA291C;
+        font-weight: 700;
+    }
+</style>
+
+<div class="themed-container">
+    <div class="col-md-5 col-lg-4">
+        <div class="register-card p-4 p-md-5">
+            <section>
+                <p class="text-center text-muted mb-4">Join the Manchester United fan community</p>
+
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                    <hr class="mb-4" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Full Name -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="" />
+                        <label asp-for="Name">Full Name</label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Email" class="form-control" autocomplete="username" placeholder="" />
+                        <label asp-for="Email">Email Address</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-3 position-relative">
+                        <input asp-for="Password" type="password" class="form-control" id="registerPasswordBox" placeholder="" />
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+                                onclick="toggleRegisterPassword()" tabindex="-1" style="border: none;">
+                            <i class="fa fa-eye" id="registerEyeIcon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-floating mb-3 position-relative">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPasswordBox" placeholder="" />
+                        <label asp-for="ConfirmPassword">Confirm Password</label>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                        <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2"
+                                onclick="toggleConfirmPassword()" tabindex="-1" style="border: none;">
+                            <i class="fa fa-eye" id="confirmEyeIcon"></i>
+                        </button>
+                    </div>
+
+                    <!-- Register Button -->
+                    <div>
+                        <button type="submit" class="w-100 btn btn-lg btn-manutd-red">
+                            <i class="fa fa-user-plus me-2"></i> Register
+                        </button>
+                    </div>
+
+                    <div class="mt-3 text-center">
+                        <p class="mb-1">
+                            Already have an account?
+                            <a asp-controller="Account" asp-action="Login"
+                               class="text-decoration-none mu-text-red">Login here</a>
+                        </p>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function toggleRegisterPassword() {
+            toggleVisibility("registerPasswordBox", "registerEyeIcon");
+        }
+
+        function toggleConfirmPassword() {
+            toggleVisibility("confirmPasswordBox", "confirmEyeIcon");
+        }
+
+        function toggleVisibility(boxId, iconId) {
+            const box = document.getElementById(boxId);
+            const icon = document.getElementById(iconId);
+
+            if (box.type === "password") {
+                box.type = "text";
+                icon.classList.replace("fa-eye", "fa-eye-slash");
+            } else {
+                box.type = "password";
+                icon.classList.replace("fa-eye-slash", "fa-eye");
+            }
+        }
+    </script>
+}

@@ -1,0 +1,163 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.PurchaseModel.PurchaseListModel>
+
+@{
+    ViewData["Title"] = "Purchase History";
+    int rowNumber = 1;
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .mufc-header {
+        font-size: 36px;
+        font-weight: bold;
+        color: #DA291C;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .nav-links {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+        .nav-links a {
+            margin: 0 15px;
+            font-weight: 600;
+            color: #DA291C;
+            text-decoration: none;
+        }
+
+            .nav-links a:hover {
+                text-decoration: underline;
+            }
+
+    .container-mufc {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background: #ffffff;
+    }
+
+    .mufc-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .mufc-table th, .mufc-table td {
+            padding: 10px;
+            border: 1px solid #eee;
+            text-align: center;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .mufc-table thead {
+            background-color: #FFCDD2; /* light MUFC red tone */
+            color: #DA291C;
+            font-weight: bold;
+        }
+
+        .mufc-table tbody tr:hover {
+            background-color: #fff3f3;
+            transition: 0.3s;
+        }
+
+    .btn-mufc {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 600;
+        color: white;
+        text-decoration: none;
+        margin-right: 5px;
+    }
+
+    .btn-details {
+        background-color: #DA291C;
+    }
+
+        .btn-details:hover {
+            background-color: #b72117;
+        }
+
+    .btn-complete {
+        background-color: #198754;
+    }
+
+        .btn-complete:hover {
+            background-color: #0f633b;
+        }
+
+    .btn-cancel {
+        background-color: #dc3545;
+    }
+
+        .btn-cancel:hover {
+            background-color: #a71d2a;
+        }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 15px;
+        border: 2px solid #DA291C;
+        color: #DA291C;
+        font-weight: 600;
+        padding: 6px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background-color: #DA291C;
+            color: white;
+        }
+</style>
+
+<div class="mufc-header">Manchester United – Purchase History</div>
+
+<div class="nav-links">
+    <a asp-action="PurchaseHistory">New Order</a>
+    <a asp-action="CompletedOrders">Completed</a>
+    <a asp-action="CanceledOrders">Canceled</a>
+</div>
+
+<div class="container-mufc">
+    <table class="mufc-table">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Purchase Date</th>
+                <th>Item Name</th>
+                <th>Customer</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@rowNumber</td>
+                    <td>@item.Qty</td>
+                    <td>$@item.Total</td>
+                    <td>@item.PurchaseDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.ItemName</td>
+                    <td>@item.CreatedBy</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn-mufc btn-details">Details</a>
+                        <a asp-action="Complete" asp-route-id="@item.Id" class="btn-mufc btn-complete">Finish</a>
+                        <a asp-action="Cancel" asp-route-id="@item.Id" class="btn-mufc btn-cancel">Cancel</a>
+                    </td>
+                </tr>
+                rowNumber++;
+            }
+        </tbody>
+    </table>
+</div>
+</div>

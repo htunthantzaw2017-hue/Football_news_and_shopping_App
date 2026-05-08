@@ -1,0 +1,132 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.PurchaseModel.PurchaseDetailModel>
+
+@{
+    ViewData["Title"] = "Purchase Details";
+}
+
+<style>
+    body {
+        background-color: #ffffff;
+        font-family: 'Segoe UI', sans-serif;
+        color: #333;
+    }
+
+    .mufc-header {
+        font-size: 36px;
+        font-weight: bold;
+        color: #DA291C;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .container-mufc {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        background: #fff;
+    }
+
+    .purchase-card {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        margin-bottom: 25px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 20px;
+        background: #fafafa;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+    }
+
+        .purchase-card img {
+            border-radius: 8px;
+            margin-right: 25px;
+            margin-bottom: 15px;
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+        }
+
+    .purchase-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+        .purchase-info p {
+            font-size: 18px;
+            margin: 8px 0;
+        }
+
+    .label {
+        font-weight: 700;
+        color: #DA291C;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        border: 2px solid #DA291C;
+        color: #DA291C;
+        font-weight: 600;
+        padding: 8px 16px;
+        border-radius: 5px;
+        text-decoration: none;
+    }
+
+        .back-btn:hover {
+            background-color: #DA291C;
+            color: white;
+        }
+
+    /* Responsive for mobile */
+
+
+    {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .purchase-card img {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .purchase-info {
+        min-width: 100%;
+    }
+
+    }
+</style>
+
+<div class="mufc-header">Purchase Details</div>
+
+<div class="container-mufc">
+    @foreach (var purchase in Model)
+    {
+        <div class="purchase-card">
+            <div class="purchase-image">
+                @if (purchase.PaymentImage != null && purchase.PaymentImage.Length > 0)
+                {
+                    <img src="data:@purchase.PaymentType;base64,@Convert.ToBase64String(purchase.PaymentImage)" class="img-thumbnail" />
+                }
+                else
+                {
+                    <img src="/images/no-image.png" class="img-thumbnail" />
+                }
+            </div>
+
+            <div class="purchase-info">
+                <p><span class="label">Item Name:</span> @purchase.ItemName</p>
+                <p><span class="label">Quantity:</span> @purchase.Qty</p>
+                <p><span class="label">Total:</span> $@purchase.Total</p>
+                <p><span class="label">Purchase Date:</span> @purchase.PurchaseDate.ToString("yyyy-MM-dd")</p>
+                <p><span class="label">Customer:</span> @purchase.CreatedBy</p>
+            </div>
+        </div>
+    }
+
+    <a asp-action="PurchaseHistory" class="back-btn">Back to List</a>
+</div>

@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.Player.PlayerListModel>
+
+@{
+    Layout = "_PlayerLayout";
+    ViewData["Title"] = "AdminIndex";
+    var selectedGender = (ViewBag.SelectedGender as string) ?? string.Empty;
+    var selectedTeam = (ViewBag.SelectedTeam as string) ?? string.Empty;
+    var searchTerm = (ViewBag.SearchTerm as string) ?? string.Empty;
+}
+
+<h1 class="mb-4 fw-bold text-uppercase text-center">Player Management</h1>
+
+<!-- ✅ Create New Player -->
+<div class="d-flex justify-content-center mb-4">
+    <a asp-action="Create" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Create New Player
+    </a>
+</div>
+
+<!-- ✅ Search Box -->
+@* <div class="d-flex justify-content-center mb-4">
+    <form method="get" asp-action="Index" class="d-flex align-items-center gap-2">
+        <input type="hidden" name="team" value="@selectedTeam" />
+        <input type="hidden" name="gender" value="@selectedGender" />
+        <input type="text" name="search" class="form-control w-auto" placeholder="Search player..." value="@searchTerm" />
+        <button type="submit" class="btn btn-outline-primary">
+            <i class="bi bi-search"></i> Search
+        </button>
+    </form>
+</div> *@
+
+@if (Model != null && Model.Any())
+{
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var player in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 text-center">
+                    <!-- ✅ Player Image -->
+                    <div class="position-relative">
+                        <img src="data:@(player.ImageType ?? "image/jpeg");base64,@(player.ImageData != null ? Convert.ToBase64String(player.ImageData) : "")"
+                             alt="@(player.Name ?? "Player image")"
+                             class="card-img-top"
+                             style="object-fit:cover; height:250px;" />
+
+                        @if (!string.IsNullOrEmpty(player.StatusName) && player.StatusName.Equals("ON LOAN", StringComparison.OrdinalIgnoreCase))
+                        {
+                            <span class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 fw-bold small">
+                                ON LOAN
+                            </span>
+                        }
+                    </div>
+
+                    <!-- ✅ Player Info -->
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">@player.Name</h5>
+                        @* <p class="text-muted mb-1">Squad No: <span class="fw-bold">@player.JerseyNumber</span></p>
+                        <p class="mb-1"><strong>Position:</strong> @player.PositionName</p> *@
+                        @* <p class="mb-1"><strong>Status:</strong> @player.StatusName</p>
+                        <p class="mb-1"><strong>Height:</strong> @player.Height</p>
+                        <p class="mb-1"><strong>Weight:</strong> @player.Weight lb</p>
+                        <p class="mb-1"><strong>Nationality:</strong> @player.Nationality</p>
+                        <p class="mb-1"><strong>Age:</strong> @player.Age</p> *@
+                        @* <p class="mb-1"><strong>DOB:</strong> @player.DOB.ToShortDateString()</p> *@
+                        @* <p class="mb-1"><strong>Gender:</strong> @player.GenderTypeName</p>
+                        <p><strong>Team:</strong> @player.TeamName</p> *@
+                    </div>
+                    <!-- ✅ Actions -->
+                    <div class="card-footer bg-light d-flex justify-content-center gap-2">
+                        @if (User.Identity?.Name == player.CreatedBy || User.Identity?.Name == "superadmin@mail.com")
+                        {
+                            <a asp-action="Edit" asp-route-id="@player.Id" class="btn btn-sm btn-warning">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@player.Id" class="btn btn-sm btn-danger">Delete</a>
+                        }
+                        <a asp-action="Details" asp-route-id="@player.Id" class="btn btn-sm btn-primary">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">No players found.</div>
+}

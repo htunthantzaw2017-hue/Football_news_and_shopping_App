@@ -1,0 +1,131 @@
+﻿@model ManchesterUnitedApp.Models.Player.PlayerEntryModel
+
+@{
+    Layout = "_PlayerLayout";
+    ViewData["Title"] = "Edit Player";
+}
+
+<h1 class="mb-4 fw-bold text-uppercase text-center">Edit Player</h1>
+<hr />
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <!-- ✅ Basic Info -->
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label fw-semibold"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Age" class="form-label fw-semibold"></label>
+                <input asp-for="Age" type="number" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="DOB" class="form-label fw-semibold"></label>
+                <input asp-for="DOB" type="date" class="form-control" />
+                <span asp-validation-for="DOB" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Nationality" class="form-label fw-semibold"></label>
+                <input asp-for="Nationality" class="form-control" />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <!-- ✅ Physical Info -->
+            <div class="form-group mb-3">
+                <label asp-for="Height" class="form-label fw-semibold"></label>
+                <input asp-for="Height" class="form-control" />
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Weight" class="form-label fw-semibold"></label>
+                <input asp-for="Weight" class="form-control" />
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="JerseyNumber" class="form-label fw-semibold"></label>
+                <input asp-for="JerseyNumber" type="number" class="form-control" />
+                <span asp-validation-for="JerseyNumber" class="text-danger"></span>
+            </div>
+
+            <!-- ✅ Dropdowns -->
+            <div class="form-group mb-3">
+                <label asp-for="GenderTypeId" class="form-label fw-semibold">Gender</label>
+                <select asp-for="GenderTypeId" asp-items="ViewBag.availableGenderTypes" class="form-select">
+                    <option value="">-- Select Gender --</option>
+                </select>
+                <span asp-validation-for="GenderTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="TeamId" class="form-label fw-semibold">Team</label>
+                <select asp-for="TeamId" asp-items="ViewBag.availableTeams" class="form-select">
+                    <option value="">-- Select Team --</option>
+                </select>
+                <span asp-validation-for="TeamId" class="text-danger"></span>
+            </div>
+
+            <!-- ✅ Position -->
+            <div class="form-group mb-3">
+                <label asp-for="PlayerPositionId" class="form-label fw-semibold">Position</label>
+                <select asp-for="PlayerPositionId" asp-items="ViewBag.availablePositions" class="form-select">
+                    <option value="">-- Select Position --</option>
+                </select>
+                <span asp-validation-for="PlayerPositionId" class="text-danger"></span>
+            </div>
+            <!-- ✅ Status -->
+            <div class="form-group mb-3">
+                <label asp-for="PlayerStatusId" class="form-label fw-semibold">Status</label>
+                <select asp-for="PlayerStatusId" asp-items="ViewBag.availableStatuses" class="form-select">
+                    <option value="">-- Select Status --</option>
+                </select>
+                <span asp-validation-for="PlayerStatusId" class="text-danger"></span>
+            </div>
+
+            <!-- ✅ Photo Upload -->
+            <div class="form-group mb-3">
+                <label asp-for="Photo" class="form-label fw-semibold"></label>
+                <input asp-for="Photo" type="file" class="form-control" accept="image/*" onchange="previewImage(event)" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+                <img id="photoPreview" src="#" alt="Image preview" style="display:none; max-width:200px; margin-top:10px;" />
+            </div>
+
+            <!-- ✅ Actions -->
+            <div class="form-group mt-3 d-flex justify-content-between">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage(event) {
+            var input = event.target;
+            var preview = document.getElementById('photoPreview');
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}

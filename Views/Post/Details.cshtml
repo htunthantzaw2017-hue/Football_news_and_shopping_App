@@ -1,0 +1,104 @@
+﻿@using ManchesterUnitedApp.Models.Post
+@model PostDetailModel
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    bool canViewAdminInfo = User.IsInRole("Admin") || User.IsInRole("SuperAdmin") ||
+      (User.Identity.IsAuthenticated && User.Identity.Name == Model.CreatedBy);
+
+    bool canEditPost = User.Identity.IsAuthenticated &&
+      (User.Identity.Name == Model.CreatedBy || User.IsInRole("SuperAdmin"));
+}
+
+<style>
+    /* ... (Styles are unchanged) ... */
+        .mu-text-red {
+                color: #DA291C;
+
+    }
+
+        .article-content-wrapper {
+                max-width: 750px;
+                margin-left: auto;
+                margin-right: auto;
+
+    }
+
+        .post-image {
+                max-width: 600px;
+                max-height: 200px;
+                width: auto;
+                object-fit: cover;
+
+    }
+
+        .post-content {
+                white-space: normal !important;
+                word-break: break-word;
+
+    }
+</style>
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <div class="col-lg-12 mx-auto">
+
+            <div class="article-content-wrapper text-center">
+                <h1 class="display-4 mu-text-red mb-2 fw-bold">@Html.DisplayFor(m => m.Title)</h1>
+
+                <p class="text-muted mb-4">
+                    @{
+                        // Define usernames to suppress (adjust email/username as needed)
+                        string suppressedAuthorName = "superadmin@mail.com"; // Example: use the full SuperAdmin username/email
+
+                        // Check if the author is NOT the suppressed user
+                        if (Model.CreatedBy != suppressedAuthorName)
+                        {
+                            <span>
+                                By <strong>@Html.DisplayFor(m => m.CreatedBy)</strong>
+                                | @Model.CreatedOn.ToString("dd MMM yyyy, HH:mm")
+                            </span>
+                        }
+                    }
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
+                    {
+                        <span class="badge bg-danger ms-2">@Html.DisplayFor(m => m.PostStatusName)</span>
+                    }
+                </p>
+
+            </div>
+
+            <hr class="mb-4" />
+
+            @if (Model.ItemImage != null && !string.IsNullOrEmpty(Model.ImageType))
+            {
+                <div class="mb-5 d-flex justify-content-center">
+                    <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ItemImage)"
+                                      class="img-fluid rounded post-image shadow-sm"
+                                      alt="@Model.Title" />
+                </div>
+            }
+
+            <div class="post-content fs-5 mb-5 text-start article-content-wrapper">
+                @Html.Raw(Model.Content)
+            </div>
+
+            <div class="d-flex justify-content-between mb-4 article-content-wrapper">
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i> Back to All Posts
+                </a>
+
+                @if (canEditPost)
+                {
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-manutd-red">
+                        <i class="fas fa-edit me-2"></i> Edit Post
+                    </a>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

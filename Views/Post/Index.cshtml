@@ -1,0 +1,107 @@
+﻿@model IEnumerable<ManchesterUnitedApp.Models.Post.PostListModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    /* Manchester United Theme Styles */
+    .mu-text-red {
+        color: #DA291C;
+        font-weight: bold; /* Make text bold */
+    }
+
+    .mu-bg-red {
+        background-color: #DA291C !important;
+        color: #ffffff;
+    }
+
+    .btn-mu-red {
+        background-color: #DA291C;
+        border-color: #DA291C;
+        color: #ffffff;
+    }
+
+        .btn-mu-red:hover {
+            background-color: #A31E17;
+            border-color: #A31E17;
+            color: #ffffff;
+        }
+
+    /* NEW CARD OVERLAY STYLES */
+    .card-overlay-news {
+        height: 350px; /* Taller card height for better visual impact */
+        overflow: hidden;
+        position: relative;
+        background: #000; /* Black background for contrast */
+        border: 2px solid #DA291C; /* Red border design */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 0 10px rgba(218, 41, 28, 0.4); /* Red glow shadow */
+    }
+
+    .card-img-overlay-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.25rem;
+        color: white;
+        /* Gradient overlay for text readability */
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
+    }
+
+    .card-overlay-news img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        opacity: 0.7; /* Dim the image slightly */
+        transition: opacity 0.3s ease;
+    }
+
+    .card-overlay-news:hover img {
+        opacity: 0.9; /* Brighten image on hover */
+    }
+
+    .card-overlay-news h5.card-title {
+        color: white; /* Ensure title is readable on dark background */
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<h1 class="mb-4 mu-text-red">Latest News</h1>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var post in Model)
+    {
+        <div class="col">
+            <div class="card card-overlay-news shadow-sm">
+
+                <img src="data:@post.ImageType;base64,@Convert.ToBase64String(post.ItemImage)"
+                     class="card-img"
+                     alt="@post.Title" />
+
+                <div class="card-img-overlay-content">
+
+                    <span class="badge mu-bg-red">@post.CategoryName</span>
+
+                    <h5 class="card-title mt-2">@post.Title</h5>
+
+                    <p class="card-text small text-truncate">@post.Content</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <a asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary btn-sm">Read More</a>
+
+                        @if (User.Identity.Name == post.CreatedBy || User.Identity.Name == "superadmin@mail.com")
+                        {
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@post.Id" class="btn btn-danger btn-sm">Delete</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
